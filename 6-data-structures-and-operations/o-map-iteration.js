@@ -29,6 +29,7 @@ const openingHours = {
 };
 
 console.log(Object.entries(openingHours));
+// give you array of arrays
 const hoursMap = new Map(Object.entries(openingHours));
 console.log(hoursMap);
 
@@ -45,7 +46,7 @@ console.log(question.get(answer === question.get("correct")));
 
 //****** convert map to array
 console.log(...question);
-// console.log(...question.entries());
+console.log(...question.entries());
 // the same
 console.log(...question.keys());
 console.log(...question.values());

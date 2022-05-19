@@ -60,3 +60,4 @@ console.log(
 
 // accept one parameter and omit the return keyword
 // but you can use {} after it and add more lines of code
+// don't have its own keyword but it refers to  the parent

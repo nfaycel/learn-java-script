@@ -1,6 +1,6 @@
 // ****************** NUMBER  Method
 
-// string -->  Number
+// convert string -->  Number
 console.log(Number("100"));
 console.log(+"100");
 
@@ -9,7 +9,7 @@ console.log((100).toString());
 console.log((100).toString());
 
 // float  -->  the closest  number  as a string
-console.log((100.5555555555).toFixed(2)); // the number refer to hpw many floated number you need
+console.log((100.5555555555).toFixed(2)); // the number refer to how many floated number you need
 // 5 and more  give to the next Number
 
 // string --> Integer and smart

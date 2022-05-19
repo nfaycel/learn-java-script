@@ -1,8 +1,8 @@
 let myFriends = ["ahmed", "Mohamed", "omar"];
 
-// other way 
+// other way
 
-const years = new Array(1991, 1984, 2008, 2020) 
+const years = new Array(1991, 1984, 2008, 2020);
 
 // getting data from the array
 
@@ -22,14 +22,13 @@ myFriends[2] = ["josef", "ali"];
 
 //! if you made the array with const keyword then you can't change it as a whole but you can change the data in it or add data or remove data
 
-const year = ["2000", "2001", "2002", "2003"]
+const year = ["2000", "2001", "2002", "2003"];
 
-// now you can do that 
-year[3] = "3000"
+// now you can do that
+year[3] = "3000";
 
-// but you can't do that 
-year = ["1000" , "2000"]
-
+// but you can't do that
+year = ["1000", "2000"];
 
 console.log(typeof myFriends); // ==> object
 
@@ -49,7 +48,7 @@ console.log(myFriends.length); // 8
 // adding item to the end of the list
 myFriends[myFriends.length] = "ali";
 
-//* change the last item 
+//* change the last item
 myFriends[myFriends.length - 1] = "ali";
 // determine the number of the items in the array
 myFriends.length = 3;
@@ -77,19 +76,17 @@ let firstNumber = numbers.shift();
 
 // if you store the function in a variable its value will be the removed element
 
-
 // [4] remove the last element and you can store it in a variable
 
 numbers.pop();
 
 // if you store the function in a variable its value will be the removed element
 
-
 // ** searching in the array
 
 //! the searching methods use the strict equality
 
-console.log(numbers.indexOf("one")); 
+console.log(numbers.indexOf("one"));
 // searching from the list and if there more than item with the value one will give you the first one
 
 // searching from an specific index

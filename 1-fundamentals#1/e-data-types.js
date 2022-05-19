@@ -31,7 +31,8 @@ console.log(typeof "string");
 // changing the value of a variable
 
 let firstName = "ali";
-// now when changing don't use let or you will be redeclare the value and you will get error this process is called [reassigning the value]
+// now when changing don't use let or you will be redeclare the value and you will get error
+// this process is called [reassigning the value]
 firstName = "omar";
 
 // defining a variable without a value

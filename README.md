@@ -1,9 +1,10 @@
 # learn-java-script
-Everything I know about JavaScript which  I gained from watching The Complete JavaScript Course 2022: From Zero to Expert!
 
-this repo will contain all the code written in the course in addotion to alot of explanations for the code in my own style.
+Everything I know about JavaScript which I gained from watching The Complete JavaScript Course 2022: From Zero to Expert!
 
- ### what exactly is covered in the course?
+this repo will contain all the code written in the course in addition to a lot of explanations for the code in my own style.
+
+### what exactly is covered in the course?
 
 - Build 5 beautiful real-world projects for your portfolio! In these projects, you will learn how to plan and architect your applications using flowcharts and common JavaScript patterns
 
@@ -49,6 +50,6 @@ this repo will contain all the code written in the course in addotion to alot of
 
 - Get fast and friendly support in the Q&A area
 
-### [Course Link](https://www.udemy.com/course/the-complete-javascript-course/) 
+### [Course Link](https://www.udemy.com/course/the-complete-javascript-course/)
 
 ###[certificate]()

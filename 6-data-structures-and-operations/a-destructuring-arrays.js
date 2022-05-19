@@ -46,7 +46,7 @@ let secondary = 4;
 
 const temp = main;
 main = secondary;
-secondary = main;
+secondary = temp;
 
 // with destructuring
 

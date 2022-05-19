@@ -94,6 +94,11 @@ const fixPassengerName = function (passengerName) {
 };
 console.log(fixPassengerName("joNaS"));
 
+const capitalize = function (passengerName) {
+  return passengerName[0].toUpperCase() + passengerName.slice(1).toLowerCase();
+};
+console.log(capitalize("joNAs"));
+
 //********* Comparing emails
 const email = "hello@jonas.io";
 const loginEmail = "  Hello@Jonas.Io \n";
@@ -135,7 +140,10 @@ console.log(announcement.replace("door", "gate"));
 //****** solve with Regular expression  [global flag /word/g]
 console.log(announcement.replace(/door/g, "gate"));
 
-//************  check if the sting have words  Booleans
+//*********** 2022 solution
+console.log(announcement.replaceAll("door", "gate"));
+
+//************  check if the sting have words  [[return Boolean]
 console.log(plane.includes("A320"));
 console.log(plane.includes("Boeing"));
 

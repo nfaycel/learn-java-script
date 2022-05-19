@@ -31,12 +31,12 @@ console.log(a, b);
 const firstName = "jonas";
 const job = "teacher";
 const birthYear = 1991;
-const Year = 2037;
+const year = 2037;
 
 const jonas =
-  "I'm " + firstName + ", a" + (Year - birthYear) + "years old " + job;
+  "I'm " + firstName + ", a" + (year - birthYear) + "years old " + job;
 
-// new way with ecma script and template literals 
+// new way with ecma script and template literals
 // we put any expression in the ${}
 jonas = `I'm ${firstName}, a ${year - birthYear} years old ${job}`;
 

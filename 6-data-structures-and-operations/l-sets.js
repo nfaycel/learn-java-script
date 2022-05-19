@@ -28,6 +28,7 @@ console.log(orderSet);
 // all the duplicates will gone
 
 console.log(new Set("jonas"));
+// will be a set of all the letters because the string is iterable
 
 //*****  the size of the set
 console.log(orderSet.size);
@@ -64,7 +65,5 @@ console.log(staffUniqueSet);
 
 // but we want it to be an array
 
-const staffUniqueArray = [...new Set(staff)];
+const staffUniqueArray = [...staffUniqueSet];
 console.log(staffUniqueArray);
-
-console.log();

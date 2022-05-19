@@ -33,6 +33,7 @@ make your variable clear and simple and descriptive
   [5]when redeclare will give you an error and alert you
   [6]you can't access before declare ( error)
   [7]variable scope drama [added to windows object] (no) 
+  [8] create block scope 
 
 
 2-{let}
@@ -43,6 +44,7 @@ make your variable clear and simple and descriptive
   [6]redeclare(No => error)
   [7]access before declare ( error)
   [8]variable scope drama [added to windows] (no)
+  [9] create block scope 
 
 
 3-{var}  the old way  and don't use it 
@@ -53,6 +55,7 @@ make your variable clear and simple and descriptive
   [5]redeclare (yes)
   [6]access before declare ( undefined)
   [7]variable scope drama [added to windows] (yes)
+  [8] don't create block scope
 */
 
 // you can declare more than one variable in the same line

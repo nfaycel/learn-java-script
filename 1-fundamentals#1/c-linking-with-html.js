@@ -18,4 +18,12 @@ or inline script
   let a = 10;
   </script>
 </head>
+
+or in the last of the body 
+<body> 
+  <script>
+  let a = 10;
+  </script>
+
+</body>
 */
