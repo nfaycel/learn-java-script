@@ -14,7 +14,7 @@ console.log((100.5555555555).toFixed(2)); // the number refer to how many floate
 
 // string --> Integer and smart
 console.log(parseInt("100.55")); // will give you 100   just
-console.log(parseInt("100 ali")); // will give you 100 not NAN  it's Not smart enough
+console.log(parseInt("100 ali")); // will give you 100
 
 // string --> float  and smart
 console.log(parseFloat("100.55")); // will give you 100.55

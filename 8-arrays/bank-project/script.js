@@ -5,12 +5,26 @@
 // BANKIST APP
 
 /////////////////////////////////////////////////
-// Data
+//*                   Data
+////////////////////////////////////////////////
 const account1 = {
   owner: 'Jonas Schmedtmann',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 70.79, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+
+  movementsDates: [
+    '2019-11-18T21:31:17.178Z',
+    '2019-12-23T07:42:02.383Z',
+    '2022-01-28T09:15:04.904Z',
+    '2022-01-01T10:17:24.185Z',
+    '2022-02-08T14:11:59.604Z',
+    '2022-05-26T17:01:17.194Z',
+    '2022-05-14T23:36:17.929Z',
+    '2022-05-20T10:51:36.790Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT', // de-DE
 };
 
 const account2 = {
@@ -18,26 +32,26 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2022-01-25T14:18:46.235Z',
+    '2022-02-05T16:33:06.386Z',
+    '2022-03-10T14:43:26.374Z',
+    '2022-05-25T18:49:59.371Z',
+    '2022-04-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
-const account3 = {
-  owner: 'Steven Thomas Williams',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
-};
-
-const account4 = {
-  owner: 'Sarah Smith',
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
-  pin: 4444,
-};
-
-const accounts = [account1, account2, account3, account4];
-
+const accounts = [account1, account2];
 /////////////////////////////////////////////////
-// Elements
+//*                  Elements
+/////////////////////////////////////////////////
+
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
 const labelBalance = document.querySelector('.balance__value');
@@ -64,29 +78,77 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
-// functions
+//*                   functions
+/////////////////////////////////////////////////
 
-//-------------------  display movements
+//*---------------------- format date
 
-// receive an array from the current account objects
-const displayMovements = function (movements, sort = false) {
-  // make the container movement is empty
+// todo: receive date object and format it
+const formatMovementDate = function (date, locale) {
+  // todo: calc the number of days between two dates
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (24 * 60 * 60 * 1000));
+
+  const daysPassed = calcDaysPassed(new Date(), date);
+
+  if (daysPassed === 0) return 'Today';
+  if (daysPassed === 1) return 'Yesterday';
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  else {
+    // format the date normally
+    // const day = `${date.getDate()}`.padStart(2, 0);
+    // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    // const year = date.getFullYear();
+    // return `${day}/${month}/${year}`;
+
+    // format with API
+    return new Intl.DateTimeFormat(locale).format(date);
+  }
+};
+
+//*----------------------- format currency
+
+// todo: receive number and format it as a currency
+const formatCur = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
+};
+
+//*----------------------------  display movements
+
+// todo: receive an array from the current account objects and display its content in HTML
+const displayMovements = function (acc, sort = false) {
+  // reset the HTML
   containerMovements.innerHTML = '';
-  // this property present the Html in the element
 
-  // sorting
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  // sorted or not
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
+  // loop over the movements array to create every thing
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
-    // the html element
+    // define the date
+    const date = new Date(acc.movementsDates[i]);
+
+    // format the date
+    const displayDate = formatMovementDate(date, acc.locale);
+
+    // format currency
+    const formattedMov = formatCur(mov, acc.locale, acc.currency);
+
+    // create the html code
     const html = `
     <div class="movements__row">
       <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-      <div class="movements__value">${mov}€</div>
+    <div class="movements__date">${displayDate}</div>
+      <div class="movements__value">${formattedMov}</div>
     </div>
     `;
 
@@ -94,72 +156,66 @@ const displayMovements = function (movements, sort = false) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-// display it for the current account
 
-//----------------  calc the total balance
+//*----------------------------  calc the total balance
 
-// receive an array with movements numbers
+// todo: receive the current account and get the movements from it
 const calcDisplayBalance = function (acc) {
+  // add the total balance to the object
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  // display the total balance to the UI
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
-// display it for the signed account
 
-//--------------------- display summary
+//*----------------------------  display summary
 
-// receive the current account
+// todo: receive the current account and get the movements from it
 const calcDisplaySummery = function (acc) {
+  // calc the positive values
   const incomes = acc.movements
     .filter(mov => mov > 0)
-    .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+    .reduce((sum, mov) => sum + mov, 0);
+  labelSumIn.textContent = formatCur(incomes, acc.locale, acc.currency);
 
+  // calc the negative values
   const out = acc.movements
     .filter(mov => mov < 0)
-    .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+    .reduce((sum, mov) => sum + mov, 0);
+  labelSumOut.textContent = formatCur(Math.abs(out), acc.locale, acc.currency);
 
+  // calc the interests according to ech object interest value
   const interest = acc.movements
     .filter(mov => mov > 0)
     .map(deposit => (deposit * acc.interestRate) / 100)
     // we want to add just interests that is more than 1
     .filter((int, i, arr) => int >= 1)
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
 };
 // display it for the current account
 
-//-------------- COMPUTE THE USERNAME
+//*----------------------------  COMPUTE THE USERNAMES
 
-// receive array of account objects
-// we loop over each object
-// we take the owner property of each one
-// we will loop over name and get the first letter nad put it into array and then join the array
-
+// todo: receive the accounts array that contain all the account object
 const createUserName = function (accounts) {
-  // receive array of objects
-  // loop over each one
-  // create new property on each one with the user name
-  // we use forEach not map because we want to change the original array
+  // get each object separated
   accounts.forEach(function (account) {
-    account.username = account.owner // we receive a name
+    // make a property on each object with the username
+    account.username = account.owner
       .toLowerCase()
       .split(' ') // put every word in an array as an array element
-      .map(name => name[0]) // loop over that array and take
+      .map(name => name[0]) // loop over that array and take first letter
       .join(''); // convert the array into string
   });
 };
 createUserName(accounts);
-// console.log(accounts);
 
-//-----------------------  login
-let currentAccount;
+//*-------------------------- update UI
 
-//--- update UI
-// receive the current account
+// todo: receive the current account
 const updateUI = function (acc) {
   // display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // display balance
   calcDisplayBalance(acc);
@@ -168,88 +224,173 @@ const updateUI = function (acc) {
   calcDisplaySummery(acc);
 };
 
-btnLogin.addEventListener('click', function (e) {
-  // e  => pointer event
-  // the event will happen if we click on the btn or if we click enter inside one of the inputs
+//*----------------------------- logout timer
+let timer;
+// todo:
+const startLogOutTimer = function () {
+  let time = 60 * 5;
 
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(Math.trunc(time % 60)).padStart(2, 0);
+
+    // in each call, print the remaining time to the UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    // when 0 seconds , stop timer and log out user
+    if (time === 0) {
+      clearInterval(timer);
+      // update the log message
+      labelWelcome.textContent = `Log in to get started`;
+
+      // hide the UI
+      containerApp.style.opacity = 0;
+    }
+
+    // decrease one second
+    time--;
+  };
+
+  // what we did is we separate the tick out to have the ability to call it before iteration so it won't be late with 1 second but it will start immediately after execution
+
+  tick();
+  // call the timer every second
+  const innerTimer = setInterval(tick, 1000);
+  return innerTimer;
+};
+//? this function will return the timer
+//? to make that start you should assign it to value
+
+/////////////////////////////////////////////////
+//*          event listener
+/////////////////////////////////////////////////
+
+//*----------------------------  login  [current account]
+
+let currentAccount;
+// todo: receive an account username and PIN
+btnLogin.addEventListener('click', function (e) {
   // prevent reloading when click on the btn
   e.preventDefault();
-  //**  define the current account  [object]
+
+  // define the current account  [object]
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
 
-  // check the credentials
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
-    // display the message
+  // check the credentials [password]
+  if (currentAccount?.pin === +inputLoginPin.value) {
+    // [1] display the message
     labelWelcome.textContent = `welcome back, ${
       currentAccount.owner.split(' ')[0]
     }`;
 
-    // display the ui
+    // [2] display the ui
     containerApp.style.opacity = 100;
-
-    // make the 2 input empty
-    inputLoginUsername.value = inputLoginPin.value = '';
-    // makes it lose the focus
-    inputLoginPin.blur();
 
     // update UI
     updateUI(currentAccount);
+
+    // [3] make the 2 input empty
+    inputLoginUsername.value = inputLoginPin.value = '';
+
+    // [4] makes it lose the focus
+    inputLoginPin.blur();
+
+    // [5] display the current date
+    const now = new Date();
+    const options = {
+      year: 'numeric',
+      month: 'numeric',
+      // weekday: 'long',
+      day: 'numeric',
+      // month: '2-digit',
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+    const locale = navigator.language;
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(now);
+
+    // Update the timer
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
-//--------------- transfer money
+//*----------------------------  transfer money
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputTransferAmount.value);
+  const amount = Math.floor(inputTransferAmount.value);
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
 
-  console.log(amount, receiverAcc);
+  // reset the inputs
   inputTransferAmount.value = inputTransferTo.value = '';
+
+  // check the credentials
   if (
     amount > 0 &&
-    currentAccount.balance >= amount &&
     receiverAcc &&
+    currentAccount.balance >= amount &&
     receiverAcc?.username !== currentAccount.username
   ) {
+    // transfer money
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    // add date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
+
     // update Ui
     updateUI(currentAccount);
+
+    // reset the logger timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
-//------------ add loan
+//*----------------------------  add loan
 
 // our bank has a rule, which says that it only grants a loan if there at least one deposit with at least 10% of the requested loan amount. mean the loan must be lees than or equal the biggest deposit * 10
 
-//------------  delete account
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = +inputLoanAmount.value;
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount / 10)) {
-    // add movements
-    currentAccount.movements.push(amount);
+    setTimeout(function () {
+      // add movements
+      currentAccount.movements.push(amount);
 
-    // update UI
-    updateUI(currentAccount);
+      // add date
+      currentAccount.movementsDates.push(new Date().toISOString());
+
+      // update UI
+      updateUI(currentAccount);
+
+      // reset the logger timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
+//*----------------------------  delete account
 
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
   if (
     inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    +inputClosePin.value === currentAccount.pin
   ) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
@@ -266,29 +407,24 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername.value = inputClosePin.value = '';
 });
 
-//-------- count all the money in the bank
+//*----------------------------  count all the money in the bank
 
 const overallBalance = accounts
   .map(acc => acc.movements)
   .flat()
   .reduce((acc, mov) => acc + mov, 0);
 
-// console.log(overallBalance);
-
-// with flatmap
-const overallBalance2 = accounts
-  .flatMap(acc => acc.movements)
-  .reduce((acc, mov) => acc + mov, 0);
-// console.log(overallBalance2);
-
-//------------- sorting
+//*----------------------------  sorting by values
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
 
+/*
+////////////////////////////////////////////////
+////////////////////////////////////////////////
 ////////////////////////////////////////////////
 // array.from()
 
@@ -299,7 +435,7 @@ labelBalance.addEventListener('click', function () {
   const movementUI = Array.from(
     document.querySelectorAll('.movements_value'),
     function (el) {
-      return Number(el.textContent.replace('€', ''));
+      return +el.textContent.replace('€', '');
     }
   );
   console.log(movementUI);
@@ -373,3 +509,23 @@ const convertTitleFace = function (title) {
 };
 
 console.log(convertTitleFace('this is a nice title but'));
+
+///////////////////////////////////////////////
+
+//*           remainder operator
+// colorize the movements row be even or odd
+labelBalance.addEventListener('click', function () {
+  [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+    if ((i + 1) % 2 === 0) row.style.backgroundColor = 'red';
+    if ((i + 1) % 2 === 1) row.style.backgroundColor = 'blue';
+  });
+});
+
+/*
+[...document.querySelectorAll('.movements_row')].forEach(function (mov, i) {
+    if (i % 2 === 0) {
+      row.style.backgroundColor = 'red';
+    }
+    if (i % 3 === 0) row.style;
+  });
+*/
